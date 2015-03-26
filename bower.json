@@ -1,0 +1,28 @@
+{
+  "name": "promisejs",
+  "version": "1.0.0",
+  "homepage": "https://github.com/stackp/promisejs",
+  "authors": [
+    "stackp",
+    "Pierre <stackp@online.fr>"
+  ],
+  "description": "A lightweight javascript implementation of promises. Include AJAX",
+  "main": "promise.min.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "promise",
+    "ajax",
+    "deferred",
+    "async"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

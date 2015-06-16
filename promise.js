@@ -83,18 +83,21 @@
      */
 
     function _encode(data) {
-        var result = "";
+        var payload = "";
         if (typeof data === "string") {
-            result = data;
+            payload = data;
         } else {
             var e = encodeURIComponent;
+            var params = [];
+
             for (var k in data) {
                 if (data.hasOwnProperty(k)) {
-                    result += '&' + e(k) + '=' + e(data[k]);
+                    params.push(e(k) + '=' + e(data[k]));
                 }
             }
+            payload = params.join('&')
         }
-        return result;
+        return payload;
     }
 
     function new_xhr() {
@@ -108,6 +111,7 @@
                 xhr = new ActiveXObject("Microsoft.XMLHTTP");
             }
         }
+        xhr.withCredentials = promise.withCredentials;
         return xhr;
     }
 
@@ -132,13 +136,18 @@
         }
 
         xhr.open(method, url);
-        xhr.setRequestHeader('Content-type',
-                             'application/x-www-form-urlencoded');
+
+        var content_type = 'application/x-www-form-urlencoded';
         for (var h in headers) {
             if (headers.hasOwnProperty(h)) {
-                xhr.setRequestHeader(h, headers[h]);
+                if (h.toLowerCase() === 'content-type')
+                    content_type = headers[h];
+                else
+                    xhr.setRequestHeader(h, headers[h]);
             }
         }
+        xhr.setRequestHeader('Content-type', content_type);
+
 
         function onTimeout() {
             xhr.abort();
@@ -172,6 +181,16 @@
         };
     }
 
+    this._withCredentials = false;
+    Object.defineProperty(this,'withCredentials',{
+        get: function() {
+          return this._withCredentials;
+        },
+        set: function(value) {
+          this._withCredentials = value;
+        }
+    });
+    
     var promise = {
         Promise: Promise,
         join: join,
@@ -181,7 +200,8 @@
         post: _ajaxer('POST'),
         put: _ajaxer('PUT'),
         del: _ajaxer('DELETE'),
-
+        withCredentials: withCredentials,
+        
         /* Error codes */
         ENOXHR: 1,
         ETIMEOUT: 2,

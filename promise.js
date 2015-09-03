@@ -111,7 +111,6 @@
                 xhr = new ActiveXObject("Microsoft.XMLHTTP");
             }
         }
-        xhr.withCredentials = promise.withCredentials;
         return xhr;
     }
 
@@ -136,6 +135,7 @@
         }
 
         xhr.open(method, url);
+        xhr.withCredentials = promise.withCredentials;
 
         var content_type = 'application/x-www-form-urlencoded';
         for (var h in headers) {
